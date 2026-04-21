@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radar Shows Públicos — Bahia 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --verde: #00E676;
+    --preto: #080C09;
+    --cinza-escuro: #111611;
+    --cinza-medio: #1C231D;
+    --cinza-claro: #2A332B;
+    --texto: #E8F0E9;
+    --texto-muted: #7A8F7B;
+    --amarelo: #FFD600;
+    --vermelho: #FF3D3D;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0A0E0B;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--texto);
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+
+  .page-title {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .page-title h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(28px, 5vw, 48px);
+    letter-spacing: 4px;
+    color: var(--verde);
+  }
+  .page-title p {
+    color: var(--texto-muted);
+    font-size: 13px;
+    margin-top: 8px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* CARD BASE */
+  .card {
+    background: var(--cinza-escuro);
+    border: 1px solid var(--cinza-claro);
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .card-header {
+    padding: 24px 28px 16px;
+    border-bottom: 1px solid var(--cinza-claro);
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .card-header .icon {
+    font-size: 28px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .card-header h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: var(--verde);
+    line-height: 1.1;
+  }
+  .card-header .subtitle {
+    font-size: 11px;
+    color: var(--texto-muted);
+    margin-top: 4px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .card-body {
+    padding: 20px 28px 24px;
+  }
+
+  /* CARD MANCHETE */
+  .card-manchete {
+    grid-column: 1 / -1;
+    background: var(--preto);
+    border: 2px solid var(--verde);
+    position: relative;
+    overflow: hidden;
+  }
+  .card-manchete::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(0,230,118,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .card-manchete .manchete-inner {
+    padding: 36px 40px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: center;
+  }
+  .card-manchete .label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--verde);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .card-manchete .big-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 7vw, 80px);
+    color: var(--verde);
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+  .card-manchete .big-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(15px, 2.5vw, 19px);
+    color: var(--texto);
+    font-weight: 500;
+    line-height: 1.4;
+    max-width: 500px;
+  }
+  .card-manchete .stats-grid {
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    gap: 12px;
+    text-align: right;
+  }
+  .card-manchete .stat-item .stat-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--amarelo);
+    letter-spacing: 1px;
+    line-height: 1;
+  }
+  .card-manchete .stat-item .stat-lbl {
+    font-size: 10px;
+    color: var(--texto-muted);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* RANKING */
+  .ranking-item {
+    display: grid;
+    grid-template-columns: 28px 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(42,51,43,0.5);
+  }
+  .ranking-item:last-child { border-bottom: none; }
+
+  .rank-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    color: var(--texto-muted);
+    text-align: center;
+  }
+  .rank-num.top3 { color: var(--amarelo); font-size: 20px; }
+
+  .rank-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--texto);
+    line-height: 1.2;
+  }
+  .rank-sub {
+    font-size: 11px;
+    color: var(--texto-muted);
+    margin-top: 2px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .rank-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 17px;
+    color: var(--verde);
+    letter-spacing: 1px;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  /* BARRA DE PROGRESSO */
+  .bar-wrap {
+    margin-top: 4px;
+    height: 3px;
+    background: var(--cinza-claro);
+    border-radius: 2px;
+    overflow: hidden;
+    grid-column: 2 / -1;
+  }
+  .bar-fill {
+    height: 100%;
+    background: var(--verde);
+    border-radius: 2px;
+    transition: width 1s ease;
+  }
+
+  /* CARD CACHE */
+  .cache-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(42,51,43,0.5);
+  }
+  .cache-item:last-child { border-bottom: none; }
+  .cache-badge {
+    background: var(--cinza-claro);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: var(--amarelo);
+    letter-spacing: 1px;
+    min-width: 52px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .cache-artista {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--texto);
+  }
+  .cache-cidade {
+    font-size: 11px;
+    color: var(--texto-muted);
+    margin-top: 3px;
+    font-family: 'DM Mono', monospace;
+  }
+  .cache-valor {
+    margin-left: auto;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    color: var(--verde);
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* CARD TEXTO (pra copiar) */
+  .card-texto .texto-post {
+    background: var(--cinza-medio);
+    border: 1px solid var(--cinza-claro);
+    border-radius: 10px;
+    padding: 20px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--texto);
+    white-space: pre-wrap;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .card-texto .copy-btn {
+    margin-top: 12px;
+    background: var(--verde);
+    color: var(--preto);
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    width: 100%;
+    transition: opacity 0.2s;
+  }
+  .card-texto .copy-btn:hover { opacity: 0.85; }
+
+  /* RODAPÉ */
+  .footer {
+    text-align: center;
+    margin-top: 40px;
+    color: var(--texto-muted);
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 1px;
+  }
+
+  @media (max-width: 600px) {
+    .card-manchete .manchete-inner {
+      grid-template-columns: 1fr;
+      padding: 28px 24px;
+    }
+    .card-manchete .stats-grid {
+      grid-template-rows: auto;
+      grid-template-columns: repeat(3, 1fr);
+      text-align: left;
+    }
+    .card-manchete .stat-item .stat-val { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-title">
+  <h1>Radar Shows Públicos — Bahia 2026</h1>
+  <p>FONTE: PNCP · INEXIGIBILIDADE · JAN–ABR 2026 · DATASET CURADO</p>
+</div>
+
+<div class="cards-grid">
+
+  <!-- CARD MANCHETE -->
+  <div class="card card-manchete">
+    <div class="manchete-inner">
+      <div>
+        <div class="label">💰 Total Bahia · Jan–Abr 2026</div>
+        <div class="big-number">R$ 160,6M</div>
+        <div class="big-text" style="margin-top:14px">
+          Prefeituras baianas gastaram <strong>R$ 160 milhões</strong> em shows e contratações artísticas nos primeiros 4 meses de 2026 — e o São João ainda nem começou.
+        </div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-val">1.408</div>
+          <div class="stat-lbl">contratos</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val">157</div>
+          <div class="stat-lbl">municípios</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val">R$114k</div>
+          <div class="stat-lbl">cachê médio</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RANKING MUNICÍPIOS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon">🏆</div>
+      <div>
+        <h2>Top Municípios</h2>
+        <div class="subtitle">Por gasto total em shows · 2026</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div id="ranking-mun"></div>
+    </div>
+  </div>
+
+  <!-- RANKING ARTISTAS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon">🎤</div>
+      <div>
+        <h2>Artistas Mais Pagos</h2>
+        <div class="subtitle">Total recebido de prefeituras · 2026</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div id="ranking-art"></div>
+    </div>
+  </div>
+
+  <!-- TOP CACHÊS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon">💎</div>
+      <div>
+        <h2>Maiores Cachês</h2>
+        <div class="subtitle">Contratos individuais identificados</div>
+      </div>
+    </div>
+    <div class="card-body" id="top-caches"></div>
+  </div>
+
+  <!-- TEXTO PRA POSTAR -->
+  <div class="card card-texto">
+    <div class="card-header">
+      <div class="icon">📲</div>
+      <div>
+        <h2>Texto Pronto pra Postar</h2>
+        <div class="subtitle">Copia, ajusta e manda · voz do Lucas</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="texto-post" id="texto-post">Levantei os dados públicos: prefeituras da Bahia já gastaram R$ 160 milhões em shows em 2026 — e o São João ainda nem começou.
+
+Tudo via Portal Nacional de Contratações Públicas (PNCP). Dados abertos, verificáveis.
+
+🏆 Quem mais gastou:
+1. Ilhéus — R$ 6,2M (31 shows)
+2. Porto Seguro — R$ 6,1M (94 shows)
+3. Paramirim — R$ 5,9M (92 shows)
+4. Correntina — R$ 5,9M (20 shows)
+5. Santo Amaro — R$ 5,7M (38 shows)
+
+🎤 Artistas mais pagos:
+• Pablo — R$ 2,1M (3 prefeituras)
+• Tayrone — R$ 1,6M (5 prefeituras)
+• Psirico — R$ 1,3M (4 prefeituras)
+• Eduardo Costa — R$ 1,1M (2 prefeituras)
+
+💎 Maior cachê individual:
+Zé Neto e Cristiano — R$ 904 mil (Correntina, Carnaval)
+
+Dados: @LuxVerso Research / PNCP
+#SãoJoão2026 #TransparênciaPublica #Bahia</div>
+      <button class="copy-btn" onclick="copiarTexto()">📋 Copiar Texto</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  DADOS: PNCP — PORTAL NACIONAL DE CONTRATAÇÕES PÚBLICAS · MODALIDADE: INEXIGIBILIDADE (CÓD. 9)<br>
+  PERÍODO: JANEIRO A ABRIL DE 2026 · BAHIA · CURADORIA: LUXVERSO RESEARCH
+</div>
+
+<script>
+const municipios = [
+  {nome: "Ilhéus",              total: "R$ 6,2M", shows: "31 shows"},
+  {nome: "Porto Seguro",        total: "R$ 6,1M", shows: "94 shows"},
+  {nome: "Paramirim",           total: "R$ 5,9M", shows: "92 shows"},
+  {nome: "Correntina",          total: "R$ 5,9M", shows: "20 shows"},
+  {nome: "Santo Amaro",         total: "R$ 5,7M", shows: "38 shows"},
+  {nome: "João Dourado",        total: "R$ 5,6M", shows: "35 shows"},
+  {nome: "Itaparica",           total: "R$ 5,2M", shows: "32 shows"},
+  {nome: "Mata de São João",    total: "R$ 4,5M", shows: "18 shows"},
+  {nome: "Nordestina",          total: "R$ 4,0M", shows: "19 shows"},
+  {nome: "Queimadas",           total: "R$ 3,9M", shows: "24 shows"},
+];
+const maxMun = 6.22;
+
+const artistas = [
+  {nome: "Pablo",              total: "R$ 2,1M", n: "3 prefeituras"},
+  {nome: "Tayrone",            total: "R$ 1,6M", n: "5 prefeituras"},
+  {nome: "Psirico",            total: "R$ 1,3M", n: "4 prefeituras"},
+  {nome: "Eduardo Costa",      total: "R$ 1,1M", n: "2 prefeituras"},
+  {nome: "Saia Rodada",        total: "R$ 930k", n: "2 prefeituras"},
+  {nome: "Zé Neto e Cristiano",total: "R$ 904k", n: "1 prefeitura"},
+  {nome: "Nadson o Ferinha",   total: "R$ 860k", n: "3 prefeituras"},
+  {nome: "Toque Dez",          total: "R$ 850k", n: "2 prefeituras"},
+  {nome: "Durval Lelys",       total: "R$ 800k", n: "2 prefeituras"},
+  {nome: "Xanddy Harmonia",    total: "R$ 700k", n: "1 prefeitura"},
+];
+const maxArt = 2.1;
+
+const caches = [
+  {artista: "Zé Neto e Cristiano", cidade: "Correntina",    valor: "R$ 904k", evento: "Carnaval"},
+  {artista: "Ana Castela",         cidade: "Irecê",          valor: "R$ 900k", evento: "São João"},
+  {artista: "Pablo",               cidade: "Porto Seguro",   valor: "R$ 750k", evento: "Carnaval"},
+  {artista: "Natanzinho Lima",     cidade: "Vera Cruz",      valor: "R$ 750k", evento: "Bye Bye Verão"},
+  {artista: "Pablo",               cidade: "Queimadas",      valor: "R$ 704k", evento: "Lavagem"},
+  {artista: "Xanddy Harmonia",     cidade: "Correntina",     valor: "R$ 700k", evento: "Carnaval"},
+  {artista: "Calcinha Preta",      cidade: "Iraquara",       valor: "R$ 646k", evento: "São João"},
+  {artista: "Xand Avião",          cidade: "Malhada",        valor: "R$ 650k", evento: "Santa Cruz"},
+];
+
+// Renderiza municípios
+const munEl = document.getElementById('ranking-mun');
+municipios.forEach((m, i) => {
+  const pct = (parseFloat(m.total.replace('R$ ','').replace('M','')) / maxMun * 100).toFixed(0);
+  munEl.innerHTML += `
+    <div class="ranking-item">
+      <div class="rank-num ${i<3?'top3':''}">${i+1}</div>
+      <div>
+        <div class="rank-name">${m.nome}</div>
+        <div class="rank-sub">${m.shows}</div>
+        <div class="bar-wrap"><div class="bar-fill" style="width:${pct}%"></div></div>
+      </div>
+      <div class="rank-value">${m.total}</div>
+    </div>`;
+});
+
+// Renderiza artistas
+const artEl = document.getElementById('ranking-art');
+artistas.forEach((a, i) => {
+  const v = parseFloat(a.total.replace('R$ ','').replace('M','').replace('k','')/1);
+  const norm = a.total.includes('M') ? v : v/1000;
+  const pct = (norm / maxArt * 100).toFixed(0);
+  artEl.innerHTML += `
+    <div class="ranking-item">
+      <div class="rank-num ${i<3?'top3':''}">${i+1}</div>
+      <div>
+        <div class="rank-name">${a.nome}</div>
+        <div class="rank-sub">${a.n}</div>
+        <div class="bar-wrap"><div class="bar-fill" style="width:${pct}%"></div></div>
+      </div>
+      <div class="rank-value">${a.total}</div>
+    </div>`;
+});
+
+// Renderiza cachês
+const cacheEl = document.getElementById('top-caches');
+caches.forEach((c, i) => {
+  cacheEl.innerHTML += `
+    <div class="cache-item">
+      <div class="cache-badge">#${i+1}</div>
+      <div>
+        <div class="cache-artista">${c.artista}</div>
+        <div class="cache-cidade">${c.cidade} · ${c.evento}</div>
+      </div>
+      <div class="cache-valor">${c.valor}</div>
+    </div>`;
+});
+
+function copiarTexto() {
+  const txt = document.getElementById('texto-post').innerText;
+  navigator.clipboard.writeText(txt).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = '✅ Copiado!';
+    setTimeout(() => btn.textContent = '📋 Copiar Texto', 2000);
+  });
+}
+</script>
+</body>
+</html>
